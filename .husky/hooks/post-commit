@@ -2,6 +2,12 @@
 
 echo "Running post-commit hook"
 
+# Verifica se estamos em um processo de post-commit recursivo
+if [ -n "$SKIP_POST_COMMIT" ]; then
+    echo "DEBUG: Skipping post-commit hook (recursive)"
+    exit 0
+fi
+
 # Verifica se há alterações na pasta docs/ comparando com o commit anterior
 if git diff HEAD^ HEAD --quiet -- docs/; then
     echo "DEBUG: No changes detected between HEAD^ and HEAD in docs/"
@@ -32,6 +38,8 @@ echo "DEBUG: Resetting docs/ changes..."
 git reset HEAD docs/
 
 echo "DEBUG: Committing original changes..."
+# Define a variável de ambiente para evitar recursão
+export SKIP_POST_COMMIT=1
 git add .
 git commit -m "$ORIGINAL_COMMIT_MSG"
 
