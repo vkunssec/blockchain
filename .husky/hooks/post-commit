@@ -4,30 +4,38 @@ echo "Running post-commit hook"
 
 # Verifica se há alterações na pasta docs/ comparando com o commit anterior
 if git diff HEAD^ HEAD --quiet -- docs/; then
-    echo "No changes in docs"
+    echo "DEBUG: No changes detected between HEAD^ and HEAD in docs/"
     exit 0
 fi
 
-echo "Changes detected in docs/"
+echo "DEBUG: Changes detected in docs/"
 
 # Verifica se o último commit já é um commit de documentação
 LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+echo "DEBUG: Last commit message: $LAST_COMMIT_MSG"
+
 if [[ "$LAST_COMMIT_MSG" == "docs: update docs" ]]; then
-    echo "Last commit was already a docs update"
+    echo "DEBUG: Last commit was already a docs update"
     exit 0
 fi
 
 # Salva o commit original temporariamente
 ORIGINAL_COMMIT_MSG=$(git log -1 --pretty=%B)
+echo "DEBUG: Original commit message: $ORIGINAL_COMMIT_MSG"
 
+echo "DEBUG: Resetting last commit..."
 # Desfaz o último commit mantendo as alterações
 git reset --soft HEAD^
 
+echo "DEBUG: Resetting docs/ changes..."
 # Separa as alterações da documentação
 git reset HEAD docs/
+
+echo "DEBUG: Committing original changes..."
 git add .
 git commit -m "$ORIGINAL_COMMIT_MSG"
 
+echo "DEBUG: Committing documentation changes..."
 # Commit das alterações da documentação
 git add docs/
 git commit -m "docs: update docs"
