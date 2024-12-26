@@ -1,32 +1,80 @@
 #!/bin/sh
+set -e
+
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Funções auxiliares
+log() {
+    echo -e "${GREEN}[Pre-commit]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Pre-commit]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Pre-commit]${NC} $1"
+}
+
+# Função para executar comandos com feedback
+run_command() {
+    local cmd="$1"
+    local msg="$2"
+    
+    log "Executando $msg..."
+    if ! eval "$cmd"; then
+        error "Falha ao executar $msg"
+        exit 1
+    fi
+}
 
 # Verifica se há alterações staged
-if git diff --cached --quiet; then
-  echo "Nenhuma alteração para commit"
-  exit 0
-fi
+check_staged_changes() {
+    if git diff --cached --quiet; then
+        warn "Nenhuma alteração para commit"
+        exit 0
+    fi
+}
 
-echo "Running pre-commit hook"
+# Função para verificar e adicionar alterações da documentação
+handle_docs_changes() {
+    if git diff --quiet docs/; then
+        log "Sem alterações na documentação"
+    else
+        log "Alterações detectadas em docs/"
+        if ! git add docs/; then
+            error "Falha ao adicionar alterações da documentação"
+            exit 1
+        fi
+        log "Documentação adicionada ao stage"
+    fi
+}
 
-echo "Running go mod tidy"
-go mod tidy
+# Função principal
+main() {
+    log "Iniciando hook pre-commit"
 
-echo "Running go fmt"
-go fmt ./...
+    # Verifica alterações staged
+    check_staged_changes
 
-echo "Running go vet"
-go vet ./...
+    # Executa comandos do Go
+    run_command "go mod tidy" "go mod tidy"
+    run_command "go fmt ./..." "go fmt"
+    run_command "go vet ./..." "go vet"
+    run_command "golangci-lint run ./..." "golangci-lint"
 
-echo "Running golangci-lint"
-golangci-lint run ./...
+    # Gera documentação Swagger
+    run_command "swag init -g cmd/main.go --parseDependency --parseInternal" "swagger"
 
-echo "Running Swagger"
-swag init -g cmd/main.go --parseDependency --parseInternal --quiet
+    # Verifica alterações na documentação
+    handle_docs_changes
 
-# Adiciona as alterações da documentação ao stage atual
-if git diff --quiet docs/; then
-    echo "No changes in docs"
-else
-    echo "Changes detected in docs/"
-    git add docs/
-fi
+    log "Pre-commit finalizado com sucesso!"
+}
+
+# Executa o script
+main "$@"

@@ -1,51 +1,110 @@
 #!/bin/sh
+set -e
 
-echo "Running post-commit hook"
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Verifica se estamos em um processo de post-commit recursivo
-if [ -n "$SKIP_POST_COMMIT" ]; then
-    echo "DEBUG: Skipping post-commit hook (recursive)"
-    exit 0
-fi
+# Funções auxiliares
+log() {
+    echo -e "${GREEN}[Post-commit]${NC} $1"
+}
 
-# Verifica se há alterações na pasta docs/ comparando com o commit anterior
-if git diff HEAD^ HEAD --quiet -- docs/; then
-    echo "DEBUG: No changes detected between HEAD^ and HEAD in docs/"
-    exit 0
-fi
+warn() {
+    echo -e "${YELLOW}[Post-commit]${NC} $1"
+}
 
-echo "DEBUG: Changes detected in docs/"
+error() {
+    echo -e "${RED}[Post-commit]${NC} $1"
+}
 
-# Verifica se o último commit já é um commit de documentação
-LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
-echo "DEBUG: Last commit message: $LAST_COMMIT_MSG"
+is_docs_commit() {
+    [[ "$(git log -1 --pretty=%B)" == "docs: update docs" ]]
+}
 
-if [[ "$LAST_COMMIT_MSG" == "docs: update docs" ]]; then
-    echo "DEBUG: Last commit was already a docs update"
-    exit 0
-fi
+has_docs_changes() {
+    ! git diff HEAD^ HEAD --quiet -- docs/
+}
 
-# Salva o commit original temporariamente
-ORIGINAL_COMMIT_MSG=$(git log -1 --pretty=%B)
-echo "DEBUG: Original commit message: $ORIGINAL_COMMIT_MSG"
+validate_git_repo() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        error "Não está em um repositório git"
+        exit 1
+    fi
+}
 
-echo "DEBUG: Resetting last commit..."
-# Desfaz o último commit mantendo as alterações
-git reset --soft HEAD^
+commit_changes() {
+    local msg="$1"
+    local files="$2"
+    
+    if ! git add $files; then
+        error "Falha ao adicionar arquivos: $files"
+        return 1
+    fi
+    
+    if ! git commit -m "$msg"; then
+        error "Falha ao criar commit: $msg"
+        return 1
+    fi
+    
+    return 0
+}
 
-echo "DEBUG: Resetting docs/ changes..."
-# Separa as alterações da documentação
-git reset HEAD docs/
+# Função principal
+main() {
+    validate_git_repo
 
-echo "DEBUG: Committing original changes..."
-# Define a variável de ambiente para evitar recursão
-export SKIP_POST_COMMIT=1
-git add .
-git commit -m "$ORIGINAL_COMMIT_MSG"
+    if [ -n "$SKIP_POST_COMMIT" ]; then
+        warn "Pulando execução recursiva"
+        exit 0
+    fi
 
-echo "DEBUG: Committing documentation changes..."
-# Commit das alterações da documentação
-git add docs/
-git commit -m "docs: update docs"
+    log "Iniciando hook"
 
-echo "Both original changes and documentation changes committed successfully"
+    if is_docs_commit; then
+        warn "Pulando commit de documentação"
+        exit 0
+    fi
+
+    if ! has_docs_changes; then
+        log "Sem alterações na documentação"
+        exit 0
+    fi
+
+    # Preparação
+    ORIGINAL_COMMIT_MSG=$(git log -1 --pretty=%B)
+    log "Processando commit: $ORIGINAL_COMMIT_MSG"
+
+    # Execução principal com tratamento de erros
+    {
+        export SKIP_POST_COMMIT=1
+        
+        log "Resetando commits..."
+        git reset --soft HEAD^
+        git reset HEAD docs/
+        
+        log "Criando commit original..."
+        if ! commit_changes "$ORIGINAL_COMMIT_MSG" "."; then
+            error "Falha ao criar commit original"
+            exit 1
+        fi
+        
+        log "Criando commit de documentação..."
+        if ! commit_changes "docs: update docs" "docs/"; then
+            error "Falha ao criar commit de documentação"
+            exit 1
+        fi
+        
+        log "Commits criados com sucesso!"
+    } || {
+        error "Erro durante o processo de commit"
+        error "Executando git reset --hard HEAD^ para reverter alterações"
+        git reset --hard HEAD^
+        exit 1
+    }
+}
+
+# Executa o script
+main "$@"
