@@ -22,3 +22,11 @@ golangci-lint run ./...
 
 echo "Running Swagger"
 swag init -g cmd/main.go --parseDependency --parseInternal
+
+# Adiciona as alterações da documentação ao stage atual
+if git diff --quiet docs/; then
+    echo "No changes in docs"
+else
+    echo "Changes detected in docs/"
+    git add docs/
+fi

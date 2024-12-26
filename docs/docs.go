@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/": {
             "post": {
-                "description": "Salva um bloco na blockchain",
+                "description": "Salva um bloco na blockchain podendo receber N valores",
                 "consumes": [
                     "application/json"
                 ],

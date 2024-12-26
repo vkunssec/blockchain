@@ -3,7 +3,7 @@
 echo "Running post-commit hook"
 
 # Verifica se há alterações na pasta docs/
-if git diff --quiet docs/; then
+if git diff HEAD^ docs/ ; then
     echo "No changes in docs"
     exit 0
 fi
