@@ -38,7 +38,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Salva um bloco na blockchain podendo receber N valores
+      description: Salva um bloco na blockchain
       parameters:
       - description: Block
         in: body

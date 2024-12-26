@@ -43,14 +43,18 @@ commit_changes() {
     local msg="$1"
     local files="$2"
     
+    # Salva a lista de arquivos que estavam staged originalmente
+    local staged_files=$(git diff --name-only --cached -- $files)
+    
     # Verifica se há arquivos para adicionar
-    if [ -z "$(git status --porcelain -- $files)" ]; then
+    if [ -z "$staged_files" ]; then
         warn "Nenhuma alteração para commitar em: $files"
         return 0
     fi
     
-    if ! git add $files; then
-        error "Falha ao adicionar arquivos: $files"
+    # Adiciona apenas os arquivos que estavam staged originalmente
+    if ! git add $staged_files; then
+        error "Falha ao adicionar arquivos: $staged_files"
         return 1
     fi
     
