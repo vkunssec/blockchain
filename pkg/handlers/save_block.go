@@ -18,7 +18,7 @@ type ErrorResponse struct {
 }
 
 // @Summary Salva um bloco
-// @Description Salva um bloco na blockchain
+// @Description Salva um bloco na blockchain podendo receber N valores
 // @Tags block
 // @Accept json
 // @Produce json
