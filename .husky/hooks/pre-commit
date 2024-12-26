@@ -21,7 +21,7 @@ echo "Running golangci-lint"
 golangci-lint run ./...
 
 echo "Running Swagger"
-swag init -g cmd/main.go --parseDependency --parseInternal
+swag init -g cmd/main.go --parseDependency --parseInternal --quiet
 
 # Adiciona as alterações da documentação ao stage atual
 if git diff --quiet docs/; then
