@@ -25,7 +25,11 @@ is_docs_commit() {
 }
 
 has_docs_changes() {
-    ! git diff HEAD^ HEAD --quiet -- docs/
+    # Verifica se há alterações na pasta docs/ (incluindo arquivos não staged)
+    if git diff --quiet docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
+        return 1
+    fi
+    return 0
 }
 
 validate_git_repo() {

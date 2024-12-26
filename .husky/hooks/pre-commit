@@ -40,20 +40,6 @@ check_staged_changes() {
     fi
 }
 
-# Função para verificar e adicionar alterações da documentação
-handle_docs_changes() {
-    if git diff --quiet docs/; then
-        log "Sem alterações na documentação"
-    else
-        log "Alterações detectadas em docs/"
-        if ! git add docs/; then
-            error "Falha ao adicionar alterações da documentação"
-            exit 1
-        fi
-        log "Documentação adicionada ao stage"
-    fi
-}
-
 # Função principal
 main() {
     log "Iniciando hook pre-commit"
@@ -68,10 +54,7 @@ main() {
     run_command "golangci-lint run ./..." "golangci-lint"
 
     # Gera documentação Swagger
-    run_command "swag init -g cmd/main.go --parseDependency --parseInternal" "swagger"
-
-    # Verifica alterações na documentação
-    handle_docs_changes
+    run_command "swag init -g cmd/main.go --parseDependency --parseInternal --quiet" "swagger"
 
     log "Pre-commit finalizado com sucesso!"
 }
