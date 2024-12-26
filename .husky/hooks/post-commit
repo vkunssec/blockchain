@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo "Running post-commit hook"
+
+# Verifica se há alterações na pasta docs/
+if git diff --quiet docs/; then
+    echo "No changes in docs"
+    exit 0
+fi
+
+echo "Changes detected in docs/"
+
+# Verifica se o último commit já é um commit de documentação
+LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+if [[ "$LAST_COMMIT_MSG" == "docs: update docs" ]]; then
+    echo "Last commit was already a docs update"
+    exit 0
+fi
+
+# Adiciona e commita as alterações da documentação
+git add docs/
+git commit -m "docs: update docs"
+
+echo "Documentation changes committed successfully"

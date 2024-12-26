@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Verifica se há alterações staged
+if git diff --cached --quiet; then
+  echo "Nenhuma alteração para commit"
+  exit 0
+fi
+
+echo "Running pre-commit hook"
+
+echo "Running go mod tidy"
+go mod tidy
+
+echo "Running go fmt"
+go fmt ./...
+
+echo "Running go vet"
+go vet ./...
+
+echo "Running golangci-lint"
+golangci-lint run ./...
+
+echo "Running Swagger"
+swag init -g cmd/main.go --parseDependency --parseInternal
+
+if git diff --quiet docs/; then
+  echo "No changes in docs"
+else
+  echo "Changes in docs"
+  git add docs/
+  git commit -m "docs: update docs"
+fi

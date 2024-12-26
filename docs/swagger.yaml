@@ -1,0 +1,67 @@
+basePath: /
+definitions:
+  github_com_vkunssec_blockchain_pkg_domain.Block:
+    description: Representa os elementos para criação de um bloco da blockchain
+    properties:
+      author:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+      timestamp:
+        type: integer
+    type: object
+  pkg_handlers.ErrorResponse:
+    properties:
+      message:
+        example: Error saving block
+        type: string
+    type: object
+  pkg_handlers.SaveBlockResponse:
+    properties:
+      hash:
+        example: 24789bede423e5c23c25856ae87bea9e37c57963ec0fbce4702a4f15cbb56a5c
+        type: string
+      message:
+        example: Block saved successfully
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: API Para uso de Blockchain
+  title: Blockchain API
+  version: "1.0"
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Salva um bloco na blockchain podendo receber N valores
+      parameters:
+      - description: Block
+        in: body
+        name: block
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_vkunssec_blockchain_pkg_domain.Block'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg_handlers.SaveBlockResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handlers.ErrorResponse'
+      summary: Salva um bloco
+      tags:
+      - block
+swagger: "2.0"
