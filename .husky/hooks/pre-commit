@@ -22,10 +22,3 @@ golangci-lint run ./...
 
 echo "Running Swagger"
 swag init -g cmd/main.go --parseDependency --parseInternal
-
-if git diff --quiet docs/; then
-  echo "No changes in docs"
-else
-  echo "Changes in docs"
-  git add docs/
-fi
