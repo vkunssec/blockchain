@@ -28,5 +28,4 @@ if git diff --quiet docs/; then
 else
   echo "Changes in docs"
   git add docs/
-  git commit -m "docs: update docs"
 fi
