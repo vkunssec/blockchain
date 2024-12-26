@@ -39,13 +39,21 @@ commit_changes() {
     local msg="$1"
     local files="$2"
     
+    # Verifica se há arquivos para adicionar
+    if [ -z "$(git status --porcelain -- $files)" ]; then
+        warn "Nenhuma alteração para commitar em: $files"
+        return 0
+    fi
+    
     if ! git add $files; then
         error "Falha ao adicionar arquivos: $files"
         return 1
     fi
     
-    if ! git commit -m "$msg"; then
+    # Adiciona mais detalhes ao erro do commit
+    if ! git commit -m "$msg" 2>/tmp/git_error; then
         error "Falha ao criar commit: $msg"
+        error "Detalhes do erro: $(cat /tmp/git_error)"
         return 1
     fi
     
