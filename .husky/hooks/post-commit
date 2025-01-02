@@ -111,15 +111,21 @@ main() {
     {
         export SKIP_POST_COMMIT=1
         
+        log "Salvando alterações da documentação..."
+        git stash push docs/
+        
         log "Resetting commits..."
         git reset --soft HEAD^
-        git reset HEAD docs/
         
         log "Creating original commit..."
         if ! commit_changes "$ORIGINAL_COMMIT_MSG" "."; then
             error "Failed to create original commit"
+            git stash pop
             exit 1
         fi
+        
+        log "Restaurando alterações da documentação..."
+        git stash pop
         
         log "Creating documentation commit..."
         if ! commit_changes "docs: update docs" "docs/"; then
@@ -132,6 +138,7 @@ main() {
         error "Error during commit process"
         error "Executing git reset --hard HEAD^ to revert changes"
         git reset --hard HEAD^
+        git stash pop 2>/dev/null || true
         exit 1
     }
 }
