@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vkunssec/blockchain/pkg/handlers"
+	"github.com/vkunssec/go-blockchain/pkg/handlers"
 
-	_ "github.com/vkunssec/blockchain/docs"
+	_ "github.com/vkunssec/go-blockchain/docs"
 )
 
 // @Summary Salva um bloco

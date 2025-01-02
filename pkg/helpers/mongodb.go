@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/vkunssec/blockchain/database"
+	"github.com/vkunssec/go-blockchain/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

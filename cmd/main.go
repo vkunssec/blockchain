@@ -4,10 +4,10 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/vkunssec/blockchain/pkg/middleware"
-	"github.com/vkunssec/blockchain/pkg/routes"
+	"github.com/vkunssec/go-blockchain/pkg/middleware"
+	"github.com/vkunssec/go-blockchain/pkg/routes"
 
-	_ "github.com/vkunssec/blockchain/docs"
+	_ "github.com/vkunssec/go-blockchain/docs"
 )
 
 // @title Blockchain API

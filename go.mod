@@ -1,4 +1,4 @@
-module github.com/vkunssec/blockchain
+module github.com/vkunssec/go-blockchain
 
 go 1.22.9
 

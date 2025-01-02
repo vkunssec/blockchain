@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/MarceloPetrucio/go-scalar-api-reference"
 	"github.com/gofiber/fiber/v2"
-	"github.com/vkunssec/blockchain/docs"
+	"github.com/vkunssec/go-blockchain/docs"
 )
 
 func SetupSwagger(app *fiber.App) {

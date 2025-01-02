@@ -9,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/vkunssec/blockchain/configs"
-	envs "github.com/vkunssec/blockchain/configs/environment"
+	"github.com/vkunssec/go-blockchain/configs"
+	envs "github.com/vkunssec/go-blockchain/configs/environment"
 )
 
 var (

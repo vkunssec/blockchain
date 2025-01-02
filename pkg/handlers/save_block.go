@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vkunssec/blockchain/pkg/domain"
-	"github.com/vkunssec/blockchain/pkg/repository"
+	"github.com/vkunssec/go-blockchain/pkg/domain"
+	"github.com/vkunssec/go-blockchain/pkg/repository"
 
-	_ "github.com/vkunssec/blockchain/docs"
+	_ "github.com/vkunssec/go-blockchain/docs"
 )
 
 type SaveBlockResponse struct {

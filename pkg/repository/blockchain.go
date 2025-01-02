@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/vkunssec/blockchain/internal/blockchain"
-	"github.com/vkunssec/blockchain/pkg/domain"
+	"github.com/vkunssec/go-blockchain/internal/blockchain"
+	"github.com/vkunssec/go-blockchain/pkg/domain"
 )
 
 // SaveBlock salva um bloco na blockchain
