@@ -60,18 +60,17 @@ commit_changes() {
     if [[ "$msg" == "docs: update docs" ]]; then
         if ! git commit -m "$msg" --no-verify; then
             error "Failed to create docs commit"
-            git status
+            # git status
             return 1
         fi
     else
         if ! git commit -m "$msg"; then
             error "Failed to create regular commit"
-            git status
+            # git status
             return 1
         fi
     fi
-    
-    log "Commit criado com sucesso: $msg"
+
     return 0
 }
 
