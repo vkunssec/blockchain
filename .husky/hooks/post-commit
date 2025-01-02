@@ -43,27 +43,20 @@ commit_changes() {
     local msg="$1"
     local files="$2"
     
-    log "Tentando criar commit para: $files"
-    
     local staged_files=$(git diff --name-only HEAD -- $files)
     local untracked_files=$(git ls-files --others --exclude-standard -- $files)
     local all_files="$staged_files $untracked_files"
-    
-    log "Arquivos modificados: $staged_files"
-    log "Arquivos não rastreados: $untracked_files"
     
     if [ -z "$all_files" ]; then
         warn "No changes to commit in: $files"
         return 0
     fi
     
-    log "Adicionando arquivos ao stage: $files"
     if ! git add "$files"; then
         error "Failed to add files in: $files"
         return 1
     fi
     
-    log "Criando commit com mensagem: $msg"
     if [[ "$msg" == "docs: update docs" ]]; then
         if ! git commit -m "$msg" --no-verify; then
             error "Failed to create docs commit"
@@ -91,8 +84,6 @@ main() {
         exit 0
     fi
 
-    log "Starting hook"
-
     if is_docs_commit; then
         warn "Skipping documentation commit"
         exit 0
@@ -110,11 +101,9 @@ main() {
     # Main execution with error handling
     {
         export SKIP_POST_COMMIT=1
-        
-        log "Salvando alterações da documentação..."
+
         git stash push docs/
-        
-        log "Resetting commits..."
+
         git reset --soft HEAD^
         
         log "Creating original commit..."
@@ -124,7 +113,6 @@ main() {
             exit 1
         fi
         
-        log "Restaurando alterações da documentação..."
         git stash pop
         
         log "Creating documentation commit..."

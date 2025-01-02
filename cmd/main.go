@@ -12,7 +12,7 @@ import (
 
 // @title Blockchain API
 // @version 1.0
-// @description Blockchain API testing methods
+// @description Blockchain API
 // @host localhost:3000
 // @BasePath /
 func main() {
