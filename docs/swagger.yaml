@@ -30,7 +30,7 @@ definitions:
 host: localhost:3000
 info:
   contact: {}
-  description: Blockchain API
+  description: Blockchain API for testing methods
   title: Blockchain API
   version: "1.0"
 paths:

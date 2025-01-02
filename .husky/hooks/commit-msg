@@ -9,15 +9,15 @@ NC='\033[0m' # No Color
 
 # Log functions
 log() {
-    echo -e "${GREEN}[Commit-MSG]${NC} $1"
+    echo -e "${GREEN}[Commit-msg]${NC} $1"
 }
 
 warn() {
-    echo -e "${YELLOW}[Commit-MSG]${NC} $1"
+    echo -e "${YELLOW}[Commit-msg]${NC} $1"
 }
 
 error() {
-    echo -e "${RED}[Commit-MSG]${NC} $1"
+    echo -e "${RED}[Commit-msg]${NC} $1"
 }
 
 # Main function to verify the commit
