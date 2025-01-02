@@ -30,7 +30,7 @@ definitions:
 host: localhost:3000
 info:
   contact: {}
-  description: API Para uso de Blockchain
+  description: Blockchain API
   title: Blockchain API
   version: "1.0"
 paths:
@@ -38,7 +38,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Salva um bloco na blockchain
+      description: Save a block in the blockchain
       parameters:
       - description: Block
         in: body
@@ -61,7 +61,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/pkg_handlers.ErrorResponse'
-      summary: Salva um bloco
+      summary: Save a block
       tags:
       - block
 swagger: "2.0"

@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/": {
             "post": {
-                "description": "Salva um bloco na blockchain",
+                "description": "Save a block in the blockchain",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,7 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "block"
                 ],
-                "summary": "Salva um bloco",
+                "summary": "Save a block",
                 "parameters": [
                     {
                         "description": "Block",
@@ -113,7 +113,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Blockchain API",
-	Description:      "API Para uso de Blockchain",
+	Description:      "Blockchain API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

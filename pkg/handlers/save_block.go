@@ -17,8 +17,8 @@ type ErrorResponse struct {
 	Message string `json:"message" example:"Error saving block"`
 }
 
-// @Summary Salva um bloco
-// @Description Salva um bloco na blockchain
+// @Summary Save a block
+// @Description Save a block in the blockchain
 // @Tags block
 // @Accept json
 // @Produce json

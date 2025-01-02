@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API Para uso de Blockchain",
+        "description": "Blockchain API",
         "title": "Blockchain API",
         "contact": {},
         "version": "1.0"
@@ -11,7 +11,7 @@
     "paths": {
         "/": {
             "post": {
-                "description": "Salva um bloco na blockchain",
+                "description": "Save a block in the blockchain",
                 "consumes": [
                     "application/json"
                 ],
@@ -21,7 +21,7 @@
                 "tags": [
                     "block"
                 ],
-                "summary": "Salva um bloco",
+                "summary": "Save a block",
                 "parameters": [
                     {
                         "description": "Block",
