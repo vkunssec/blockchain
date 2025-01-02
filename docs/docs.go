@@ -113,7 +113,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Blockchain API",
-	Description:      "Blockchain API testing methods",
+	Description:      "Blockchain API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
