@@ -1,13 +1,13 @@
 #!/bin/sh
 set -e
 
-# Cores para output
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Funções auxiliares
+# Auxiliary functions
 log() {
     echo -e "${GREEN}[Pre-commit]${NC} $1"
 }
@@ -20,44 +20,44 @@ error() {
     echo -e "${RED}[Pre-commit]${NC} $1"
 }
 
-# Função para executar comandos com feedback
+# Function to execute commands with feedback
 run_command() {
     local cmd="$1"
     local msg="$2"
     
-    log "Executando $msg..."
+    log "Executing $msg..."
     if ! eval "$cmd"; then
-        error "Falha ao executar $msg"
+        error "Failed to execute $msg"
         exit 1
     fi
 }
 
-# Verifica se há alterações staged
+# Verify if there are staged changes
 check_staged_changes() {
     if git diff --cached --quiet; then
-        warn "Nenhuma alteração para commit"
+        warn "No changes to commit"
         exit 0
     fi
 }
 
-# Função principal
+# Main function
 main() {
-    log "Iniciando hook pre-commit"
+    log "Starting pre-commit hook"
 
-    # Verifica alterações staged
+    # Verify staged changes
     check_staged_changes
 
-    # Executa comandos do Go
+    # Execute Go commands
     run_command "go mod tidy" "go mod tidy"
     run_command "go fmt ./..." "go fmt"
     run_command "go vet ./..." "go vet"
     run_command "golangci-lint run ./..." "golangci-lint"
 
-    # Gera documentação Swagger
+    # Generate Swagger documentation
     run_command "swag init -g cmd/main.go --parseDependency --parseInternal --quiet" "swagger"
 
-    log "Pre-commit finalizado com sucesso!"
+    log "Pre-commit finished successfully!"
 }
 
-# Executa o script
+# Execute the script
 main "$@"
