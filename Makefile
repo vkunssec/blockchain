@@ -25,7 +25,7 @@ swagger:
 	swag init -g cmd/main.go --parseDependency --parseInternal
 
 dev:
-	go get -u github.com/automation-co/husky
+	go get -u github.com/vkunssec/husky
 	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 	go get -u github.com/swaggo/swag/cmd/swag
 	make swagger
