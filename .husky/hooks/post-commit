@@ -43,42 +43,42 @@ commit_changes() {
     local msg="$1"
     local files="$2"
     
-    # Verify all modified files in the specified directory
+    log "Tentando criar commit para: $files"
+    
     local staged_files=$(git diff --name-only HEAD -- $files)
-    
-    # Also verify untracked files
     local untracked_files=$(git ls-files --others --exclude-standard -- $files)
-    
-    # Combine both types of files
     local all_files="$staged_files $untracked_files"
     
-    # Verify if there are files to add
+    log "Arquivos modificados: $staged_files"
+    log "Arquivos não rastreados: $untracked_files"
+    
     if [ -z "$all_files" ]; then
         warn "No changes to commit in: $files"
         return 0
     fi
     
-    # Add all files in the specified directory
+    log "Adicionando arquivos ao stage: $files"
     if ! git add "$files"; then
         error "Failed to add files in: $files"
         return 1
     fi
     
-    # Skip pre-commit hook for documentation commits
+    log "Criando commit com mensagem: $msg"
     if [[ "$msg" == "docs: update docs" ]]; then
-        if ! git commit -m "$msg" --no-verify 2>/tmp/git_error; then
-            error "Failed to create commit: $msg"
-            error "Error details: $(cat /tmp/git_error)"
+        if ! git commit -m "$msg" --no-verify; then
+            error "Failed to create docs commit"
+            git status
             return 1
         fi
     else
-        if ! git commit -m "$msg" 2>/tmp/git_error; then
-            error "Failed to create commit: $msg"
-            error "Error details: $(cat /tmp/git_error)"
+        if ! git commit -m "$msg"; then
+            error "Failed to create regular commit"
+            git status
             return 1
         fi
     fi
     
+    log "Commit criado com sucesso: $msg"
     return 0
 }
 
