@@ -34,27 +34,33 @@ run_command() {
 
 # Verify if there are staged changes
 check_staged_changes() {
-    if git diff --cached --quiet; then
-        warn "No changes detected for commit"
+    local staged_files=$(git diff --cached --name-only)
+    
+    if [ -z "$staged_files" ]; then
+        warn "Nenhuma alteração para commit detectada"
         return 1
     fi
+    
+    log "Arquivos em staged: $staged_files"
     return 0
 }
 
 # Function to check if changes are only in docs directory
 check_docs_only() {
     local files=$(git diff --cached --name-only)
+    log "Verificando arquivos: $files"
     local non_docs=0
     
     for file in $files; do
         if [[ ! $file =~ ^docs/ ]]; then
+            log "Arquivo não-docs encontrado: $file"
             non_docs=1
             break
         fi
     done
 
     if [ $non_docs -eq 0 ] && [ -n "$files" ]; then
-        warn "Changes only in docs directory, skipping pre-commit"
+        warn "Alterações apenas na pasta docs, ignorando pre-commit"
         exit 0
     fi
 }
