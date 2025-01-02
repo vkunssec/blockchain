@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_vkunssec_blockchain_pkg_domain.Block"
+                            "$ref": "#/definitions/github_com_vkunssec_go-blockchain_pkg_domain.Block"
                         }
                     }
                 ],
@@ -63,7 +63,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_vkunssec_blockchain_pkg_domain.Block": {
+        "github_com_vkunssec_go-blockchain_pkg_domain.Block": {
             "description": "Representa os elementos para criação de um bloco da blockchain",
             "type": "object",
             "properties": {
